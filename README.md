@@ -79,6 +79,10 @@ If a match is found the pull request will be rebuilt.
 
 * `create_comments`: *Optional (default: false).* If true write comments with build status to pull requests.
 
+* `paths`: *Optional (default "[]" - matches all).* If specified (as a list of regular expression patterns), only changes to the specified files will be built.
+
+* `ignore_paths`: *Optional (default "[]" - matches nothing).* If specified (as a list of regular expression patterns), changes to the specified files will not be built, unless other paths have also been changed.
+
 ## Behavior
 
 ### `check`: Search for pull requests to build.
@@ -121,13 +125,6 @@ Set the status message on specified pull request.
 * `status`: *Required.* The status of success, failure or pending.
 
   * [`on_success`](https://concourse-ci.org/on-success-step-hook.html) and [`on_failure`](https://concourse-ci.org/on-failure-step-hook.html) triggers may be useful for you when you wanted to reflect build result to the pull request (see the example below).
-
-* `comment`: *Optional.* A custom comment that you want added to the status message.
-  Any occurence of `[[BRANCH]]` will be replace by the actual branch name form the
-  pull request.
-
-* `commentFile`: *Optional.* The path to a file that contains a custom comment to
-  add to the message. This allow the comment to be built by a previous task in the job.
 
 * `comment`: *Optional.* A custom comment that you want added to the status message.
   Any occurence of `[[BRANCH]]` will be replace by the actual branch name form the
