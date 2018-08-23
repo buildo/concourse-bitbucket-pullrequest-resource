@@ -47,6 +47,7 @@ path=$(jq -r '.params.path // ""' < "$payload")
 status=$(jq -r '.params.status // ""' < "$payload")
 additionnal_comment=$(jq -r '.params.comment // ""' < "$payload")
 additionnal_comment_file=$(jq -r '.params.commentFile // ""' < "$payload")
+custom_build_key=$(jq -r '.params.build_key // ""' < "$payload")
 
 configure_git_ssl_verification "$skip_ssl_verification"
 configure_git_global "${git_config_payload}"
@@ -64,6 +65,12 @@ fi
 if [ -z "$status" ]; then
   log "invalid payload (missing status)"
   exit 1
+fi
+
+if [ -n "$custom_build_key" ]; then
+  build_key=$custom_build_key
+else
+  build_key=$BUILD_JOB_NAME
 fi
 
 cd "$source"
@@ -136,14 +143,14 @@ uri_parser "$uri"
 repo_host="${uri_schema}://${uri_address}"$(getBasePathOfBitbucket)
 
 # include ATC_EXTERNAL_URL in build status key, different sources should have different builds
-build_key="$BUILD_TEAM_NAME-$BUILD_PIPELINE_NAME-$BUILD_JOB_NAME-$ATC_EXTERNAL_URL"
+full_build_key="$BUILD_TEAM_NAME-$BUILD_PIPELINE_NAME-$build_key-$ATC_EXTERNAL_URL"
 build_name="Concourse $BUILD_TEAM_NAME: $BUILD_PIPELINE_NAME - $BUILD_JOB_NAME - #$BUILD_NAME"
 build_url="$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME"
 build_description="Concourse build for PRQ #$prq_number @ $ATC_EXTERNAL_URL"
 
 data=$(jq -cn "{
   state: \"$build_state\",
-  key: \"$build_key\",
+  key: \"$full_build_key\",
   name: \"$build_name\",
   url: \"$build_url\",
   description: \"$build_description\"

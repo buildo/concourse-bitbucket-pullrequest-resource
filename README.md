@@ -133,6 +133,8 @@ Set the status message on specified pull request.
 * `commentFile`: *Optional.* The path to a file that contains a custom comment to
   add to the message. This allow the comment to be built by a previous task in the job.
 
+* `build_key`: *Optional.* When set, it can be used to update the build status correctly across multiple different jobs. Both jobs will need to have the same key for this to work.
+
 ## Example pipeline
 
 ```yaml
