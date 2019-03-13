@@ -54,6 +54,7 @@ bitbucket_request() {
   fi
 
   curl_cmd="curl -s --netrc-file \"$netrc_file\" $TOKEN $extra_options \"$request_url\" > \"$request_result\""
+
   if ! eval $curl_cmd; then
     log "Bitbucket request $request_url failed"
     exit 1
