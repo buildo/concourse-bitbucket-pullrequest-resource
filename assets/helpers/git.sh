@@ -39,7 +39,6 @@ add_pullrequest_metadata_basic() {
   # $2: pull request repository
   # $3: skip ssl verification
   local repo_name=$(basename "$2" | sed "s/.git$//")
-  local repo_project=$(basename $(dirname "$2"))
 
   # parse uri and retrieve host
   local repo_host="${uri_schema}://${uri_address}"$(getBasePathOfBitbucket)
