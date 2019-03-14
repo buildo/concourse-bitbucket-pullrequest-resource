@@ -61,27 +61,6 @@ tmp_file_unique() {
   mktemp "$TMPDIR/bitbucket-pullrequest-resource-$1.XXXXXX"
 }
 
-#
-# URI parsing function
-#
-# The function creates global variables with the parsed results.
-# It returns 0 if parsing was successful or non-zero otherwise.
-#
-# [schema://][user[:password]@]host[:port][/path][?[arg1=val1]...][#fragment]
-#
-# Reference: http://wp.vpalos.com/537/uri-parsing-using-bash-built-in-features/
-#
-uri_parser() {
-    # uri capture
-    uri="$@"
-
-    # safe escaping
-    uri="${uri//\`/%60}"
-    uri="${uri//\"/%22}"
-
-    return 0
-}
-
 date_from_epoch_seconds() {
   # Mac OS X:
   #date -r $1

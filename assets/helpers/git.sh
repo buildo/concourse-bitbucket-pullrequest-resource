@@ -42,7 +42,6 @@ add_pullrequest_metadata_basic() {
   local repo_project=$(basename $(dirname "$2"))
 
   # parse uri and retrieve host
-  uri_parser "$2"
   local repo_host="${uri_schema}://${uri_address}"$(getBasePathOfBitbucket)
 
   local title=$(set -o pipefail; bitbucket_pullrequest "$repo_host" "$repo_project" "$repo_name" "$1" "" "$3" | jq -r '.title')

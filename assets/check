@@ -87,7 +87,6 @@ if [ -n "$PULL_REQUESTS" ]; then
   repo_name=$(basename "$uri" | sed "s/.git$//")
 
   # parse uri and retrieve host
-  uri_parser "$uri"
   repo_host="${uri_schema}://${uri_address}"
 
   repo_host=${repo_host}$(getBasePathOfBitbucket)

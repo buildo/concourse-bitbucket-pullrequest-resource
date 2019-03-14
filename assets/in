@@ -151,7 +151,6 @@ if [ -z "$target_commit" ]; then
 fi
 
 # parse uri and retrieve host
-uri_parser "$uri"
 repo_host="${uri_schema}://${uri_address}"
 repo_host=${repo_host}$(getBasePathOfBitbucket)
 

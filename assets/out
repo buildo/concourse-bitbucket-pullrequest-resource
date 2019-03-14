@@ -149,7 +149,6 @@ target_commit=$(git rev-list --parents -1 $merge_commit | awk '{print $2}')
 repo_name=$(basename "$uri" | sed "s/.git$//")
 
 # parse uri and retrieve host
-uri_parser "$uri"
 repo_host="${uri_schema}://${uri_address}"$(getBasePathOfBitbucket)
 
 # include ATC_EXTERNAL_URL in build status key, different sources should have different builds
