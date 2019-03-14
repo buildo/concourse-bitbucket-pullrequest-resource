@@ -180,3 +180,9 @@ jobs:
           path: pullrequest
           status: failure
 ```
+
+
+test with
+```sh
+echo '{ "source": { "uri": "git@bitbucket.com:project/repo.git", "uri_address": "bitbucket.aipadmin.com", "uri_schema": "https", "repo_project": "pro", "password": "", "username": "" } }' | ./check
+```

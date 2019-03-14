@@ -35,6 +35,9 @@ configure_credentials "$payload"
 
 skip_ssl_verification=$(jq -r '.source.skip_ssl_verification // false' < ${payload})
 uri=$(jq -r '.source.uri // ""' < "$payload")
+uri_schema=$(jq -r '.source.uri_schema // ""' < "$payload")
+uri_address=$(jq -r '.source.uri_address // ""' < "$payload")
+repo_project=$(jq -r '.source.repo_project // ""' < "$payload")
 git_config_payload=$(jq -r '.source.git_config // []' < "$payload")
 commit_verification_key_ids=$(jq -r '(.source.commit_verification_key_ids // [])[]' < "$payload")
 commit_verification_keys=$(jq -r '(.source.commit_verification_keys // [])[]' < "$payload")
@@ -57,6 +60,21 @@ fi
 
 if [ -z "$prq_id" ]; then
   log "invalid payload (missing pull request id):" "$(cat "$payload")"
+  exit 1
+fi
+
+if [ -z "$uri_address" ]; then
+  log "invalid payload (missing uri_address):" "$(cat $payload)"
+  exit 1
+fi
+
+if [ -z "$uri_schema" ]; then
+  log "invalid payload (missing uri_schema):" "$(cat $payload)"
+  exit 1
+fi
+
+if [ -z "$repo_project" ]; then
+  log "invalid payload (missing repo_project):" "$(cat $payload)"
   exit 1
 fi
 
@@ -133,13 +151,11 @@ if [ -z "$target_commit" ]; then
 fi
 
 # parse uri and retrieve host
-uri_parser "$uri"
 repo_host="${uri_schema}://${uri_address}"
 repo_host=${repo_host}$(getBasePathOfBitbucket)
 
 # determine repository name for calling REST api
 repo_name=$(basename "$uri" | sed "s/.git$//")
-repo_project=$(basename $(dirname "$uri"))
 
 # verify target branch of prq
 prq=$(bitbucket_pullrequest "$repo_host" "$repo_project" "$repo_name" "$prq_id" "" "$skip_ssl_verification")

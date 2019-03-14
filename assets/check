@@ -30,9 +30,11 @@ configure_credentials "$payload"
 
 log "Parsing payload"
 uri=$(jq -r '.source.uri // ""' < "$payload")
+uri_schema=$(jq -r '.source.uri_schema // ""' < "$payload")
+uri_address=$(jq -r '.source.uri_address // ""' < "$payload")
+repo_project=$(jq -r '.source.repo_project // ""' < "$payload")
 skip_ssl_verification=$(jq -r '.source.skip_ssl_verification // false' < ${payload})
 git_config_payload=$(jq -r '.source.git_config // []' < "$payload")
-
 only_for_branch=$(jq -r '.source.only_for_branch // "."' < "$payload")
 only_without_conflicts=$(jq -r '.source.only_without_conflicts // "true"' < "$payload")
 only_when_mergeable=$(jq -r '.source.only_when_mergeable // "false"' < "$payload")
@@ -48,6 +50,21 @@ configure_git_global "${git_config_payload}"
 
 if [ -z "$uri" ]; then
   log "invalid payload (missing uri):" "$(cat $payload)"
+  exit 1
+fi
+
+if [ -z "$uri_address" ]; then
+  log "invalid payload (missing uri_address):" "$(cat $payload)"
+  exit 1
+fi
+
+if [ -z "$uri_schema" ]; then
+  log "invalid payload (missing uri_schema):" "$(cat $payload)"
+  exit 1
+fi
+
+if [ -z "$repo_project" ]; then
+  log "invalid payload (missing repo_project):" "$(cat $payload)"
   exit 1
 fi
 
@@ -68,10 +85,8 @@ if [ -n "$PULL_REQUESTS" ]; then
   log "Calculating repository specifics"
   # determine repository name for calling REST api
   repo_name=$(basename "$uri" | sed "s/.git$//")
-  repo_project=$(basename $(dirname "$uri"))
 
   # parse uri and retrieve host
-  uri_parser "$uri"
   repo_host="${uri_schema}://${uri_address}"
 
   repo_host=${repo_host}$(getBasePathOfBitbucket)
