@@ -184,5 +184,5 @@ jobs:
 
 test with
 ```sh
-echo '{ "source": { "uri": "git@bitbucket.aipadmin.com:pro/alinity-pro.git", "uri_address": "bitbucket.aipadmin.com", "uri_schema": "https", "repo_project": "pro", "password": "", "username": "" } }' | ./check
+echo '{ "source": { "uri": "git@bitbucket.com:project/repo.git", "uri_address": "bitbucket.aipadmin.com", "uri_schema": "https", "repo_project": "pro", "password": "", "username": "" } }' | ./check
 ```
