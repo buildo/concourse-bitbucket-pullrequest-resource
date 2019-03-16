@@ -29,16 +29,11 @@ bitbucket_request() {
   local request_result=$(tmp_file_unique bitbucket-request)
   local request_data=$(tmp_file_unique bitbucket-request-data)
 
-  log "requesting ${request_url}"
-
   # deletes the temp files
   request_result_cleanup() {
     rm -f "$request_result"
     rm -f "$request_data"
   }
-
-  # register the cleanup function to be called on the EXIT signal
-  trap request_result_cleanup EXIT
 
   local extra_options=""
   if [ -n "$data" ]; then
@@ -89,8 +84,6 @@ bitbucket_request() {
     log "Bitbucket request ($request_url) failed: $(cat ${request_result})"
     exit 1
   fi
-
-  log "finished PR check"
 
   # cleanup
   request_result_cleanup
