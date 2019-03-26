@@ -175,6 +175,6 @@ git config --add pullrequest.date "$prq_date"
 git config --add pullrequest.branch "$branch"
 
 jq -n "{
-  version: $(jq '.version' < "$payload"),
+  version: $(cat "$payload" | jq '.version' | jq --arg branch "$branch" '. + {branch: $branch}'),
   metadata: $(pullrequest_metadata "$prq_id" "$uri" "$skip_ssl_verification")
 }" >&3

@@ -203,6 +203,7 @@ jq -n "{
   version: {
     id: \"$prq_number\",
     hash: \"$prq_hash\",
+    branch: \"$branch\",
     date: \"$PULL_REQUEST_DATE\"
   },
   metadata: $(pullrequest_metadata "$prq_number" "$uri" "$skip_ssl_verification")
