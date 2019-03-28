@@ -105,6 +105,12 @@ if [ -n "$PULL_REQUESTS" ]; then
       continue
     fi
 
+    if [ "$prq" != "NO_SUCH_PULL_REQUEST" ] && \
+       [ "$prq" != "ALREADY_MERGED" ] && \
+       [ "$prq" != "DECLINED" ]; then
+      branch=$(echo "$prq" | jq -r '.fromRef.displayId')
+    fi
+
     PULL_REQUEST_DATE=$(echo "$prq" | jq -r '.updatedDate')
 
     log "Pull request #${prq_number}"
@@ -161,7 +167,7 @@ if [ -n "$PULL_REQUESTS" ]; then
 
       # add prq to versions
       if [ "$skip_build" == "false" ]; then
-        versions+=" + [{ id: \"$prq_number\", hash: \"$prq_hash\", date: \"$PULL_REQUEST_DATE\" }]"
+        versions+=" + [{ id: \"$prq_number\", hash: \"$prq_hash\", date: \"$PULL_REQUEST_DATE\", branch: \"$branch\" }]"
       fi
     fi
   done <<< "$PULL_REQUESTS"
