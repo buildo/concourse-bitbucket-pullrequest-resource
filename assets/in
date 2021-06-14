@@ -83,7 +83,7 @@ if test "$depth" -gt 0 2> /dev/null; then
   depthflag="--depth $depth"
 fi
 
-branch="pull-requests/${prq_id}/merge"
+branch="pull-requests/${prq_id}/from"
 
 log "Cloning $uri in $destination"
 git clone $depthflag "$uri" "$destination"
@@ -136,20 +136,6 @@ if [ "$disable_git_lfs" != "true" ]; then
   git submodule foreach "git lfs fetch && git lfs checkout"
 fi
 
-# calculate source and target commit
-source_commit=$(git rev-list --parents -1 $ref | awk '{print $3}')
-target_commit=$(git rev-list --parents -1 $ref | awk '{print $2}')
-
-if [ -z "$source_commit" ]; then
-  log "Unable to determine source commit from merge commit $ref. Please verify depth configuration."
-  exit 1
-fi
-
-if [ -z "$target_commit" ]; then
-  log "Unable to determine target commit from merge commit $ref. Please verify depth configuration."
-  exit 1
-fi
-
 # parse uri and retrieve host
 repo_host="${uri_schema}://${uri_address}"
 repo_host=${repo_host}$(getBasePathOfBitbucket)
@@ -168,8 +154,6 @@ fi
 
 # expose configuration of pull request that can be used in container
 git config --add pullrequest.id $prq_id
-git config --add pullrequest.source $source_commit
-git config --add pullrequest.target $target_commit
 git config --add pullrequest.merge $ref
 git config --add pullrequest.date "$prq_date"
 git config --add pullrequest.branch "$branch"
